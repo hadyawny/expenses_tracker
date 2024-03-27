@@ -43,8 +43,7 @@ export class ApiFeatures {
     if (this.searchQuery.keyword) {
       this.mongooseQuery.find({
         $or: [
-          { title: { $regex: this.searchQuery.keyword } },
-          { description: { $regex: this.searchQuery.keyword } },
+          { type: { $regex: this.searchQuery.keyword } },
         ],
       });
     }

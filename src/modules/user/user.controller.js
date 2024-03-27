@@ -2,8 +2,8 @@ import jwt from "jsonwebtoken";
 import { userModel } from "../../../database/models/user.model.js";
 import bcrypt from "bcrypt";
 import { catchError } from "../../middleware/catchError.js";
-import { deleteOne, getAllOne, getSingleOne } from "../handler/handlers.js";
 import { AppError } from "../../utils/appError.js";
+import { ApiFeatures } from "../../utils/apiFeatures.js";
 
 const addUser = catchError(async (req, res,next) => {
 
@@ -54,11 +54,34 @@ const updateUser = catchError(async (req, res,next) => {
   user && res.json({ message: "success", user });
 })
 
-const getAllUsers = getAllOne(userModel);
+const getAllUsers = catchError(async (req, res, next) => {
 
-const getSingleUser = getSingleOne(userModel);
 
-const deleteUser = deleteOne(userModel);
+
+  let apiFeatures = new ApiFeatures(userModel.find(), req.query)
+    .fields()
+    .filter()
+    .pagination()
+    .search()
+    .sort();
+
+  let users = await apiFeatures.mongooseQuery;
+
+  !users && res.status(404).json({ message: "users not found" });
+  users && res.json({ message: "success",page: apiFeatures.pageNumber, users });
+});;
+
+const getSingleUser = catchError(async (req, res, next) => {
+  let user = await userModel.findById(req.params.id);
+  !user && res.status(404).json({ message: "user not found" });
+  user && res.json({ message: "success", user });
+});;
+
+const deleteUser = catchError(async (req, res, next) => {
+  let user = await userModel.findOneAndDelete(req.user._id);
+  !user && res.status(404).json({ message: "user not found" });
+  user && res.json({ message: "success", user });
+});;
 
 
 export { addUser ,getAllUsers , getSingleUser ,deleteUser,updateUser,changePassword,signin};
