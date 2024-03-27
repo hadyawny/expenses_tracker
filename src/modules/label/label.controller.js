@@ -8,8 +8,9 @@ const addLabel = catchError(async (req, res, next) => {
   let label = new labelModel(req.body);
   await label.save();
 
-  let user = await userModel.findByIdAndUpdate(req.user._id,{$push:{labelsList:label._id}});
-
+  let user = await userModel.findByIdAndUpdate(req.user._id, {
+    $push: { labelsList: label._id },
+  });
 
   res.json({ message: "success", label });
 });
@@ -57,7 +58,9 @@ const deleteLabel = catchError(async (req, res, next) => {
     user: req.user._id,
   });
 
-  let user = await userModel.findByIdAndUpdate(req.user._id,{$pull:{labelsList:req.params.id}});
+  let user = await userModel.findByIdAndUpdate(req.user._id, {
+    $pull: { labelsList: req.params.id },
+  });
 
   !label && res.status(404).json({ message: "label not found" });
   label && res.json({ message: "success", label });

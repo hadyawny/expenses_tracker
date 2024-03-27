@@ -27,14 +27,24 @@ const updateUserVal = Joi.object({
 
 const signinSchemaVal = Joi.object({
   email: Joi.string().email().required(),
-  password: Joi.string().pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/),
-  
-})
+  password: Joi.string().pattern(
+    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
+  ),
+});
 
 const changePasswordVal = Joi.object({
-  password: Joi.string().pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/),
-  newPassword: Joi.string().pattern(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/),
+  password: Joi.string().pattern(
+    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
+  ),
+  newPassword: Joi.string().pattern(
+    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
+  ),
+});
 
-})
-
-export { addUserVal, paramsIdVal, updateUserVal , changePasswordVal, signinSchemaVal};
+export {
+  addUserVal,
+  paramsIdVal,
+  updateUserVal,
+  changePasswordVal,
+  signinSchemaVal,
+};

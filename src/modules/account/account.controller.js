@@ -8,8 +8,9 @@ const addAccount = catchError(async (req, res, next) => {
   let account = new accountModel(req.body);
   await account.save();
 
-  let user = await userModel.findByIdAndUpdate(req.user._id,{$push:{accountsList:account._id}});
-
+  let user = await userModel.findByIdAndUpdate(req.user._id, {
+    $push: { accountsList: account._id },
+  });
 
   res.json({ message: "success", account });
 });
@@ -57,11 +58,51 @@ const deleteAccount = catchError(async (req, res, next) => {
     user: req.user._id,
   });
 
-  let user = await userModel.findByIdAndUpdate(req.user._id,{$pull:{accountsList:req.params.id}});
-
+  let user = await userModel.findByIdAndUpdate(req.user._id, {
+    $pull: { accountsList: req.params.id },
+  });
 
   !account && res.status(404).json({ message: "account not found" });
   account && res.json({ message: "success", account });
 });
 
-export { addAccount, getAllAccounts, getSingleAccount, deleteAccount, updateAccount };
+const getTotalBalance = catchError(async (req, res, next) => {
+  let balance = 0;
+
+  let accountsList = await accountModel.find({ user: req.user._id });
+  for (let i = 0; i < accountsList.length; i++) {
+    balance += accountsList[i].currentBalance;
+  }
+
+  res.json({ message: "success", "Total Balance": balance });
+});
+
+const transferBalance = catchError(async (req, res, next) => {
+  let fromAccount = await accountModel.findOneAndUpdate(
+    { _id: req.body.fromAccount, user: req.user._id },
+    { $inc: { currentBalance: -req.body.amount } }
+  );
+  if (!fromAccount) {
+    return res.status(404).json({ message: "fromAccount not found" });
+  }
+
+  let toAccount = await accountModel.findOneAndUpdate(
+    { _id: req.body.toAccount, user: req.user._id },
+    { $inc: { currentBalance: req.body.amount } }
+  );
+  if (!toAccount) {
+    return res.status(404).json({ message: "toAccount not found" });
+  }
+
+  res.json({ message: "success", fromAccount, toAccount });
+});
+
+export {
+  addAccount,
+  getAllAccounts,
+  getSingleAccount,
+  deleteAccount,
+  updateAccount,
+  getTotalBalance,
+  transferBalance,
+};

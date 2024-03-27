@@ -9,7 +9,7 @@ const addLabelVal = Joi.object({
     "yellow",
     "orange",
     "purple",
-    "pink" 
+    "pink"
   ),
 });
 
@@ -22,7 +22,7 @@ const updateLabelVal = Joi.object({
     "yellow",
     "orange",
     "purple",
-    "pink" 
+    "pink"
   ),
   name: Joi.string().min(2).max(30),
 });
@@ -31,10 +31,4 @@ const paramsIdVal = Joi.object({
   id: Joi.string().min(2).max(30).required(),
 });
 
-
-
-export {
-  addLabelVal,
-  updateLabelVal,
-  paramsIdVal
-};
+export { addLabelVal, updateLabelVal, paramsIdVal };

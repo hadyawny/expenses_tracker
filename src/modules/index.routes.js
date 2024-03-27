@@ -6,16 +6,16 @@ import transactionRouter from "./transaction/transaction.routes.js";
 import userRouter from "./user/user.routes.js";
 
 export const bootstrap = (app) => {
+  app.use("/api/v1/users", userRouter);
+  app.use("/api/v1/labels", labelRouter);
+  app.use("/api/v1/accounts", accountRouter);
+  app.use("/api/v1/transactions", transactionRouter);
 
-
-  app.use("/api/v1/users",userRouter);
-  app.use("/api/v1/labels",labelRouter);
-  app.use("/api/v1/accounts",accountRouter);
-  app.use("/api/v1/transactions",transactionRouter);
-
-
-  app.get('/',(req,res)=>res.send("Welcome to Expenses Tracker Server please select any of available Endpoints"))
+  app.get("/", (req, res) =>
+    res.send(
+      "Welcome to Expenses Tracker Server please select any of available Endpoints"
+    )
+  );
 
   app.use(globalError);
 };
-  

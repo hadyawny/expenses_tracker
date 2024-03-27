@@ -118,4 +118,10 @@ const deleteTransaction = catchError(async (req, res, next) => {
   transaction && res.json({ message: "success", transaction });
 });
 
-export { addTransaction, getAllTransactions, updateTransaction,getSingleTransaction ,deleteTransaction};
+export {
+  addTransaction,
+  getAllTransactions,
+  updateTransaction,
+  getSingleTransaction,
+  deleteTransaction,
+};

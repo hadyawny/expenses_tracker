@@ -3,7 +3,15 @@ import Joi from "joi";
 const addAccountVal = Joi.object({
   name: Joi.string().min(2).max(30).required(),
   type: Joi.string().valid(
-    'cash', 'bank', 'credit card', 'investment', 'savings', 'checking', 'loan', 'retirement', 'expense'
+    "cash",
+    "bank",
+    "credit card",
+    "investment",
+    "savings",
+    "checking",
+    "loan",
+    "retirement",
+    "expense"
   ),
   currentBalance: Joi.number(),
 });
@@ -11,7 +19,15 @@ const addAccountVal = Joi.object({
 const updateAccountVal = Joi.object({
   id: Joi.string().hex().length(24).required(),
   type: Joi.string().valid(
-    'cash', 'bank', 'credit card', 'investment', 'savings', 'checking', 'loan', 'retirement', 'expense'
+    "cash",
+    "bank",
+    "credit card",
+    "investment",
+    "savings",
+    "checking",
+    "loan",
+    "retirement",
+    "expense"
   ),
   name: Joi.string().min(2).max(30),
   currentBalance: Joi.number(),
@@ -21,10 +37,11 @@ const paramsIdVal = Joi.object({
   id: Joi.string().min(2).max(30).required(),
 });
 
+const transferBalanceVal = Joi.object({
+  fromAccount: Joi.string().hex().length(24).required(),
+  toAccount: Joi.string().hex().length(24).required(),
 
+  amount: Joi.number().positive().required(),
+});
 
-export {
-  addAccountVal,
-  updateAccountVal,
-  paramsIdVal
-};
+export { addAccountVal, updateAccountVal, paramsIdVal, transferBalanceVal };
