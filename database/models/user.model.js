@@ -38,6 +38,11 @@ const schema = new mongoose.Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    otp: {
+      type: String,
+      trim: true,
+      default:""
+    },
 
     passwordChangedAt: Date,
   },

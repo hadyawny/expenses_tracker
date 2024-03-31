@@ -4,19 +4,24 @@ import {
   addUser,
   changePassword,
   deleteUser,
+  forgotPassword,
   getAllUsers,
   getSingleUser,
+  resetPassword,
   signin,
   updateUser,
+  verifyEmail,
 } from "./user.controller.js";
 import {
   addUserVal,
   changePasswordVal,
+  forgotPasswordVal,
   paramsIdVal,
+  resetPasswordVal,
   signinSchemaVal,
   updateUserVal,
 } from "./user.validation.js";
-import { checkEmail } from "../../middleware/checkExist.js";
+import { checkEmail, checkResetEmail } from "../../middleware/checkExist.js";
 import { protectedRoutes } from "../../middleware/protectedRoutes.js";
 
 const userRouter = express.Router();
@@ -34,6 +39,20 @@ userRouter.patch(
   protectedRoutes,
   validation(changePasswordVal),
   changePassword
+);
+
+userRouter.get("/verifyEmail/:token", verifyEmail);
+userRouter.put(
+  "/forgotPassword",
+  validation(forgotPasswordVal),
+  checkResetEmail,
+  forgotPassword
+);
+userRouter.put(
+  "/resetPassword",
+  validation(resetPasswordVal),
+  checkResetEmail,
+  resetPassword
 );
 
 userRouter

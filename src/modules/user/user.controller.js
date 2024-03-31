@@ -4,8 +4,15 @@ import bcrypt from "bcrypt";
 import { catchError } from "../../middleware/catchError.js";
 import { AppError } from "../../utils/appError.js";
 import { ApiFeatures } from "../../utils/apiFeatures.js";
+import {
+  sendResetPassword,
+  sendVerifyEmail,
+} from "../../services/emails/sendEmails.js";
+import otpGenerator from "otp-generator";
 
 const addUser = catchError(async (req, res, next) => {
+  sendVerifyEmail(req.body.email);
+
   let user = new userModel(req.body);
   await user.save();
   let token = jwt.sign(
@@ -83,6 +90,60 @@ const deleteUser = catchError(async (req, res, next) => {
   user && res.json({ message: "success", user });
 });
 
+const verifyEmail = catchError(async (req, res, next) => {
+  let verifyEmail = jwt.verify(
+    req.params.token,
+    process.env.EMAIL_KEY,
+    (err) => {
+      if (err) next(new AppError("invalid token", 401));
+    }
+  ).email;
+
+  if (verifyEmail) {
+    await userModel.findOneAndUpdate(
+      { email: verifyEmail },
+      { confirmEmail: true }
+    );
+    res.json({ message: "Success" });
+  } else {
+    next(new AppError("invalid token", 401));
+  }
+});
+
+const forgotPassword = catchError(async (req, res, next) => {
+  const generatedOtp = otpGenerator.generate(6, {
+    upperCaseAlphabets: false,
+    specialChars: false,
+    lowerCaseAlphabets: false,
+  });
+  let user = await userModel.findOneAndUpdate(
+    { email: req.body.email },
+    {
+      otp: generatedOtp,
+    }
+  );
+  if (user) {
+    sendResetPassword(user.email, generatedOtp);
+    res.json({ message: "Success" });
+  } else {
+    next(new AppError("email not found", 401));
+  }
+});
+
+const resetPassword = catchError(async (req, res, next) => {
+  let user = await userModel.findOne({ email: req.body.email });
+
+  if (user.otp === req.body.otp) {
+    await userModel.findOneAndUpdate(
+      { email: req.body.email },
+      { password: req.body.password, otp: "" }
+    );
+    res.json({ message: "successfully changed password " });
+  } else {
+    res.status(404).json({ message: "otp is wrong" });
+  }
+});
+
 export {
   addUser,
   getAllUsers,
@@ -91,4 +152,7 @@ export {
   updateUser,
   changePassword,
   signin,
+  verifyEmail,
+  forgotPassword,
+  resetPassword,
 };

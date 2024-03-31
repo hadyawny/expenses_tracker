@@ -25,6 +25,8 @@ const updateUserVal = Joi.object({
   role: Joi.string().valid("user", "admin"),
 });
 
+
+
 const signinSchemaVal = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().pattern(
@@ -41,10 +43,25 @@ const changePasswordVal = Joi.object({
   ),
 });
 
+const forgotPasswordVal = Joi.object({
+
+  email: Joi.string().email().required(),
+});
+
+const resetPasswordVal = Joi.object({
+
+  email: Joi.string().email().required(),
+  otp: Joi.string().length(6).required(),
+  password: Joi.string().pattern(
+    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
+  ).required(),
+});
+
 export {
   addUserVal,
   paramsIdVal,
   updateUserVal,
   changePasswordVal,
   signinSchemaVal,
+  forgotPasswordVal,resetPasswordVal,
 };

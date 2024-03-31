@@ -16,6 +16,14 @@ export const checkEmail = async (req, res, next) => {
   next()
 }
 
+export const checkResetEmail = async (req, res, next) => {
+  let user = await userModel.findOne({ email: req.body.email });
+
+  if (!user) return next(new AppError("email is not found",409))
+
+
+  next()
+}
 
 
 export const checkLabel = async (req, res, next) => {
