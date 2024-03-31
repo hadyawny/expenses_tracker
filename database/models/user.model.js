@@ -32,6 +32,7 @@ const schema = new mongoose.Schema(
     },
     accountsList: [{ type: mongoose.Types.ObjectId, ref: "account" }],
     labelsList: [{ type: mongoose.Types.ObjectId, ref: "label" }],
+    budgetsList: [{ type: mongoose.Types.ObjectId, ref: "budget" }],
     role: {
       type: String,
       enum: ["user", "admin"],

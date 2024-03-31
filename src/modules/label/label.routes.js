@@ -13,13 +13,13 @@ import {
   getSingleLabel,
   updateLabel,
 } from "./label.controller.js";
-import { checkEmail } from "../../middleware/checkExist.js";
+import { checkLabel } from "../../middleware/checkExist.js";
 
 const labelRouter = express.Router();
 
 labelRouter
   .route("/")
-  .post(protectedRoutes, validation(addLabelVal), checkEmail, addLabel)
+  .post(protectedRoutes, validation(addLabelVal), checkLabel, addLabel)
   .get(protectedRoutes, getAllLabels);
 
 labelRouter

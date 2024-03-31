@@ -12,7 +12,7 @@ const addAccount = catchError(async (req, res, next) => {
     $push: { accountsList: account._id },
   });
 
-  res.json({ message: "success", account });
+  res.json({ message: "success", account ,user});
 });
 
 const updateAccount = catchError(async (req, res, next) => {
