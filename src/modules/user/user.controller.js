@@ -91,12 +91,10 @@ const deleteUser = catchError(async (req, res, next) => {
 });
 
 const verifyEmail = catchError(async (req, res, next) => {
+  
   let verifyEmail = jwt.verify(
     req.params.token,
-    process.env.EMAIL_KEY,
-    (err) => {
-      if (err) next(new AppError("invalid token", 401));
-    }
+    process.env.EMAIL_KEY
   ).email;
 
   if (verifyEmail) {
